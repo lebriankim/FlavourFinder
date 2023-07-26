@@ -15,8 +15,8 @@
             });
         }
         function imageUploaded(bool) {
-         document.getElementById("image-upload-button").disabled = true;
-         document.getElementById("image-upload-button").removeAttribute('id');
+            document.getElementById("image-upload-button").disabled = true;
+            document.getElementById("image-upload-button").removeAttribute('id');
             const sendObject = {
               "input": {
                 "message_type": "text",
@@ -26,7 +26,20 @@
             const sendOptions = {
               "silent": true
             }
-            console.log(sendObject["input"]["text"]);
+            watson.send(sendObject, sendOptions).catch(function(error) {
+              console.error('This message did not send!');
+            });
+        }
+        function sendFoodItems(foodItems) {
+            const sendObject = {
+              "input": {
+                "message_type": "text",
+                "text": foodItems
+              }
+            };
+            const sendOptions = {
+              "silent": true
+            }
             watson.send(sendObject, sendOptions).catch(function(error) {
               console.error('This message did not send!');
             });

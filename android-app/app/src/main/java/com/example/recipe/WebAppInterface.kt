@@ -8,18 +8,6 @@ import androidx.appcompat.app.AppCompatActivity
 import com.google.gson.Gson
 
 class WebAppInterface(private val mContext: Context) {
-
-//    @JavascriptInterface
-//    fun handler(event: String) {
-//        data class ReceiveEvent(
-//            val type: String,
-//            val data: Any
-//        )
-//        val event2: ReceiveEvent = Gson().fromJson(event, ReceiveEvent::class.java)
-//        println(event2.type)
-//        println(event2.data)
-//    }
-
     // called when receiving a customResponse, return an HTML string of the message custom layout
     @JavascriptInterface
     fun customResponse(event: String): String {
@@ -44,7 +32,6 @@ class WebAppInterface(private val mContext: Context) {
     // opens the gallery for the user to select an image
     @JavascriptInterface
     fun openGallery() {
-        println("YEAHYA")
         (mContext as MainActivity).imageLauncher.launch("image/*")
     }
 }

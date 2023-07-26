@@ -1,31 +1,34 @@
 package com.example.recipe
 
+import android.annotation.SuppressLint
 import android.net.Uri
 import android.os.Bundle
-import android.os.StrictMode
-import android.os.StrictMode.ThreadPolicy
+import android.os.ParcelFileDescriptor
 import android.webkit.WebView
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.documentfile.provider.DocumentFile
+import androidx.lifecycle.lifecycleScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.apache.http.entity.ContentType
 import org.apache.http.entity.mime.MultipartEntityBuilder
+import org.json.JSONObject
 import java.io.BufferedReader
-import java.io.DataOutputStream
 import java.io.FileInputStream
 import java.net.HttpURLConnection
 import java.net.URL
 
 
 class MainActivity : AppCompatActivity() {
-    lateinit var webView: WebView
+    private lateinit var webView: WebView
 
+    @SuppressLint("SetJavaScriptEnabled")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        val policy = ThreadPolicy.Builder().permitAll().build()
-        StrictMode.setThreadPolicy(policy)
-        webView = findViewById<WebView>(R.id.webView)
+        webView = findViewById(R.id.webView)
         webView.settings.javaScriptEnabled = true
         // add the interface which forms the bridge with the javascript functions
         webView.addJavascriptInterface(WebAppInterface(this), "Android")
@@ -34,18 +37,25 @@ class MainActivity : AppCompatActivity() {
     }
 
     // callback for the image uploader, sends the result to Watson
-    val imageLauncher = registerForActivityResult(
-        ActivityResultContracts.GetContent()) { uri: Uri? ->
-        println(uri)
+    val imageLauncher = registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
         if(uri != null && DocumentFile.fromSingleUri(this, uri)?.exists() == true) {
-            sendImageToYolo(uri)
             webView.loadUrl("javascript:imageUploaded(true)")
+            lifecycleScope.launch {
+                val namesList = withContext(Dispatchers.IO) {
+                    sendImageToYolo(uri)
+                }
+                withContext(Dispatchers.Main) {
+                    webView.loadUrl("javascript:sendFoodItems(\"$namesList\")")
+                }
+            }
+        } else {
+            webView.loadUrl("javascript:imageUploaded(false)")
         }
-        webView.loadUrl("javascript:imageUploaded(false)")
     }
 
-    private fun sendImageToYolo(uri: Uri) {
-        val byteArray = FileInputStream(contentResolver.openFileDescriptor(uri, "r")?.fileDescriptor).use { it.readBytes() }
+    private suspend fun sendImageToYolo(uri: Uri): String {
+        val fileDescriptor = contentResolver.openFileDescriptor(uri, "r")!!
+        val byteArray = FileInputStream(fileDescriptor.fileDescriptor).use { it.readBytes() }
         val bodyBuilder = MultipartEntityBuilder.create()
         bodyBuilder.addBinaryBody("image", byteArray, ContentType.IMAGE_JPEG, "test.jpg")
         bodyBuilder.addTextBody("size", "640")
@@ -54,7 +64,9 @@ class MainActivity : AppCompatActivity() {
         val entity = bodyBuilder.build()
 
         val url = URL("https://api.ultralytics.com/v1/predict/HUSgcANncfJqQM5D64t6")
-        val connection = url.openConnection() as HttpURLConnection
+        val connection = withContext(Dispatchers.IO) {
+            url.openConnection()
+        } as HttpURLConnection
         connection.requestMethod = "POST"
         connection.setRequestProperty("x-api-key", "a85ba500ef371352ebbd1973f96f26f4d0065d030e")
         connection.setRequestProperty(entity.contentType.name, entity.contentType.value)
@@ -67,7 +79,16 @@ class MainActivity : AppCompatActivity() {
 
             if (connection.responseCode == HttpURLConnection.HTTP_OK) {
                 val response = connection.inputStream.bufferedReader().use { it.readText() }
-                println(response)
+                val jsonObject = JSONObject(response)
+                val dataArray = jsonObject.getJSONArray("data")
+                val namesList = mutableListOf<String>()
+                for (i in 0 until dataArray.length()) {
+                    val dataObject = dataArray.getJSONObject(i)
+                    val name = dataObject.getString("name")
+                    namesList.add(name)
+                }
+                println("found nameList: $namesList")
+                return namesList.toString()
             } else {
                 println(connection.responseCode)
                 println(connection.responseMessage)
@@ -77,6 +98,8 @@ class MainActivity : AppCompatActivity() {
             }
         } finally {
             connection.disconnect()
+            fileDescriptor.close()
         }
+        return ""
     }
 }
