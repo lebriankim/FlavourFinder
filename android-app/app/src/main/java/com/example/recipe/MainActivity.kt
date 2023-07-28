@@ -14,6 +14,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.apache.http.entity.ContentType
 import org.apache.http.entity.mime.MultipartEntityBuilder
+import org.json.JSONArray
 import org.json.JSONObject
 import java.io.BufferedReader
 import java.io.FileInputStream
@@ -87,8 +88,9 @@ class MainActivity : AppCompatActivity() {
                     val name = dataObject.getString("name")
                     namesList.add(name)
                 }
-                println("found nameList: $namesList")
-                return namesList.toString()
+                val jsonArray = JSONArray(namesList).toString().replace("\"", "'")
+                println(jsonArray)
+                return jsonArray
             } else {
                 println(connection.responseCode)
                 println(connection.responseMessage)
