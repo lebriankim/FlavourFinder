@@ -29,6 +29,7 @@
             watson.send(sendObject, sendOptions).catch(function(error) {
               console.error('This message did not send!');
             });
+            watson.updateAssistantInputFieldVisibility(true);
         }
         function sendFoodItems(foodItems) {
             const sendObject = {
@@ -54,6 +55,7 @@
             // The callback function that is called after the widget instance has been created.
             onLoad: function(instance) {
                 watson = instance
+                instance.updateAssistantInputFieldVisibility(true);
                 instance.on({ type: "customResponse", handler: customResponseHandler });
                 instance.render();
             },
