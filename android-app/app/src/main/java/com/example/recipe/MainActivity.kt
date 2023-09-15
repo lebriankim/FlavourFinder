@@ -82,7 +82,7 @@ class MainActivity : AppCompatActivity() {
                 val response = connection.inputStream.bufferedReader().use { it.readText() }
                 val jsonObject = JSONObject(response)
                 val dataArray = jsonObject.getJSONArray("data")
-                val namesList = mutableListOf<String>()
+                val namesList = mutableSetOf<String>()
                 for (i in 0 until dataArray.length()) {
                     val dataObject = dataArray.getJSONObject(i)
                     val name = dataObject.getString("name")
