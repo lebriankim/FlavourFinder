@@ -3,7 +3,6 @@ package com.example.recipe
 import android.annotation.SuppressLint
 import android.net.Uri
 import android.os.Bundle
-import android.os.ParcelFileDescriptor
 import android.webkit.WebView
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
@@ -64,14 +63,14 @@ class MainActivity : AppCompatActivity() {
         bodyBuilder.addTextBody("iou", "0.45")
         val entity = bodyBuilder.build()
 
-        val url = URL("https://api.ultralytics.com/v1/predict/HUSgcANncfJqQM5D64t6")
+        val url = URL("https://api.ultralytics.com/v1/predict/af6qKxjR7JKNq39pWmPK")
         val connection = withContext(Dispatchers.IO) {
             url.openConnection()
         } as HttpURLConnection
         connection.requestMethod = "POST"
-        connection.setRequestProperty("x-api-key", "a85ba500ef371352ebbd1973f96f26f4d0065d030e")
+        connection.setRequestProperty("x-api-key", "df1264c80c912652a1c869130e61d6e9ddfe1de730")
         connection.setRequestProperty(entity.contentType.name, entity.contentType.value)
-        connection.setRequestProperty("Accept", "application/json");
+        connection.setRequestProperty("Accept", "application/json")
         connection.doOutput = true
         connection.connect()
 
