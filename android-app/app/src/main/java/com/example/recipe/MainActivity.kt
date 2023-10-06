@@ -72,7 +72,7 @@ class MainActivity : AppCompatActivity() {
         val b = outputStream.toByteArray()
 
         val bodyBuilder = MultipartEntityBuilder.create()
-        bodyBuilder.addBinaryBody("image", b, ContentType.IMAGE_JPEG, uri.lastPathSegment)
+        bodyBuilder.addBinaryBody("image", b, ContentType.IMAGE_JPEG, "image.jpeg")
         bodyBuilder.addTextBody("size", "640")
         bodyBuilder.addTextBody("confidence", "0.25")
         bodyBuilder.addTextBody("iou", "0.45")
