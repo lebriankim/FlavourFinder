@@ -58,16 +58,17 @@ class MainActivity : AppCompatActivity() {
     private suspend fun sendImageToYolo(uri: Uri): String {
         val stream = contentResolver.openInputStream(uri)
         var bitmap = BitmapFactory.decodeStream(stream)
-        val bitmapRatio = bitmap.width / bitmap.height
-        bitmap = if (bitmapRatio > 1 && bitmap.width > 1080) {
-            Bitmap.createScaledBitmap(bitmap, 1080, 1080 / bitmapRatio, true)
-        } else if(bitmap.height > 1080) {
-            Bitmap.createScaledBitmap(bitmap, 1080 * bitmapRatio, 1080, true)
+        val maxSize = 1280
+        val bitmapRatio = bitmap.width.toFloat() / bitmap.height.toFloat()
+        bitmap = if (bitmapRatio > 1 && bitmap.width > maxSize) {
+            Bitmap.createScaledBitmap(bitmap, maxSize, (maxSize / bitmapRatio).toInt(), true)
+        } else if(bitmapRatio < 1 && bitmap.height > maxSize) {
+            Bitmap.createScaledBitmap(bitmap, (maxSize * bitmapRatio).toInt(), 640, true)
         } else {
             bitmap
         }
         val outputStream = ByteArrayOutputStream()
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 85, outputStream)
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 70, outputStream)
         val b = outputStream.toByteArray()
 
         val bodyBuilder = MultipartEntityBuilder.create()
