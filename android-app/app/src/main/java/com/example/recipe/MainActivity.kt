@@ -1,6 +1,8 @@
 package com.example.recipe
 
 import android.annotation.SuppressLint
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Bundle
 import android.webkit.WebView
@@ -16,7 +18,7 @@ import org.apache.http.entity.mime.MultipartEntityBuilder
 import org.json.JSONArray
 import org.json.JSONObject
 import java.io.BufferedReader
-import java.io.FileInputStream
+import java.io.ByteArrayOutputStream
 import java.net.HttpURLConnection
 import java.net.URL
 
@@ -54,53 +56,58 @@ class MainActivity : AppCompatActivity() {
     }
 
     private suspend fun sendImageToYolo(uri: Uri): String {
-        val fileDescriptor = contentResolver.openFileDescriptor(uri, "r")!!
-        val byteArray = FileInputStream(fileDescriptor.fileDescriptor).use { it.readBytes() }
+        val stream = contentResolver.openInputStream(uri)
+        var bitmap = BitmapFactory.decodeStream(stream)
+        val bitmapRatio = bitmap.width / bitmap.height
+        bitmap = if (bitmapRatio > 1 && bitmap.width > 1080) {
+            Bitmap.createScaledBitmap(bitmap, 1080, 1080 / bitmapRatio, true)
+        } else if(bitmap.height > 1080) {
+            Bitmap.createScaledBitmap(bitmap, 1080 * bitmapRatio, 1080, true)
+        } else {
+            bitmap
+        }
+        val outputStream = ByteArrayOutputStream()
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 85, outputStream)
+        val b = outputStream.toByteArray()
+
         val bodyBuilder = MultipartEntityBuilder.create()
-        bodyBuilder.addBinaryBody("image", byteArray, ContentType.IMAGE_JPEG, "test.jpg")
+        bodyBuilder.addBinaryBody("image", b, ContentType.IMAGE_JPEG, uri.lastPathSegment)
         bodyBuilder.addTextBody("size", "640")
         bodyBuilder.addTextBody("confidence", "0.25")
         bodyBuilder.addTextBody("iou", "0.45")
         val entity = bodyBuilder.build()
 
         val url = URL("https://api.ultralytics.com/v1/predict/af6qKxjR7JKNq39pWmPK")
-        val connection = withContext(Dispatchers.IO) {
-            url.openConnection()
-        } as HttpURLConnection
+        val connection = withContext(Dispatchers.IO) { url.openConnection() as HttpURLConnection }
         connection.requestMethod = "POST"
         connection.setRequestProperty("x-api-key", "df1264c80c912652a1c869130e61d6e9ddfe1de730")
         connection.setRequestProperty(entity.contentType.name, entity.contentType.value)
         connection.setRequestProperty("Accept", "application/json")
+        connection.doInput = true
         connection.doOutput = true
-        connection.connect()
 
-        try {
-            entity.writeTo(connection.outputStream)
+        entity.writeTo(connection.outputStream)
 
-            if (connection.responseCode == HttpURLConnection.HTTP_OK) {
-                val response = connection.inputStream.bufferedReader().use { it.readText() }
-                val jsonObject = JSONObject(response)
-                val dataArray = jsonObject.getJSONArray("data")
-                val namesList = mutableSetOf<String>()
-                for (i in 0 until dataArray.length()) {
-                    val dataObject = dataArray.getJSONObject(i)
-                    val name = dataObject.getString("name")
-                    namesList.add(name)
-                }
-                val jsonArray = JSONArray(namesList).toString().replace("\"", "'")
-                println(jsonArray)
-                return jsonArray
-            } else {
-                println(connection.responseCode)
-                println(connection.responseMessage)
-                BufferedReader(connection.errorStream.reader()).use {
-                    println(it.readText())
-                }
+        if (connection.responseCode == HttpURLConnection.HTTP_OK) {
+            val response = connection.inputStream.bufferedReader().use { it.readText() }
+            val jsonObject = JSONObject(response)
+            val dataArray = jsonObject.getJSONArray("data")
+            val namesList = mutableSetOf<String>()
+            for (i in 0 until dataArray.length()) {
+                val dataObject = dataArray.getJSONObject(i)
+                val name = dataObject.getString("name")
+                namesList.add(name)
             }
-        } finally {
-            connection.disconnect()
-            fileDescriptor.close()
+            val jsonArray = JSONArray(namesList).toString().replace("\"", "'")
+            println(jsonArray)
+            return jsonArray
+        } else {
+            println(connection.responseCode)
+            println(connection.responseMessage)
+            BufferedReader(connection.errorStream.reader()).use {
+                println(it.readText())
+            }
+            return ""
         }
-        return ""
     }
 }
