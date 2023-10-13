@@ -62,7 +62,7 @@ More detail is available in our [description document](./docs/DESCRIPTION.md).
 
 Diagram and step-by-step description of the flow of our solution:
 
-![Video transcription/translaftion app](https://developer.ibm.com/developer/tutorials/cfc-starter-kit-speech-to-text-app-example/images/cfc-covid19-remote-education-diagram-2.png)
+![Solution Architecture](./images/Solution_Architecture.png)
 
 1. User uploads food images to Android application
 2. The application send the uploaded images to YOLO API for image prediction
