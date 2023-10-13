@@ -47,7 +47,7 @@ To further encourage the reduction of food loss and waste, our application goes 
 
 ### IBM AI service(s) used
 
-- [Watson Assistant](https://cloud.ibm.com/catalog/services/watson-assistant) - The Watson Assistant is integrated within our android application serving as a conversational system with the users. Through an interactive dialogue conversation, the assistant will prompt the user to upload food images. The uploaded images would then be sent to YOLO API for image prediction and this would return a list of ingredients as identified from the image. Then the list of ingredients is sent to spoonacular API which would return a list of recipes based on the ingredients. The list of recipes would then be displayed in the application as suggestions to which the user can pick any of the recipe they are interested in.
+- [Watson Assistant](https://cloud.ibm.com/catalog/services/watson-assistant) - The Watson Assistant is integrated within our android application serving as a conversational system with the users. Through an interactive dialogue conversation, the assistant will prompt the user to upload food images. The uploaded image would then be sent to the model for image prediction and this would return a list of ingredients as identified from the image. Then the list of ingredients is sent to Spoonacular API which would return a list of recipes based on the ingredients. The list of recipes would then be displayed in the application as suggestions to which the user can pick any of the recipe they are interested in.
 
 
 ### Solution architecture
@@ -64,8 +64,8 @@ Diagram and step-by-step description of the flow of our solution:
 6. Watson Assistant displays a list of recipes
 
 Links:
-- Image Detection Model [FlavourFinder - v2](https://hub.ultralytics.com/models/af6qKxjR7JKNq39pWmPK)
-- Image Detection Training Dataset [Eggs.v5-custom_data5.yolov8](https://hub.ultralytics.com/datasets/mG8GrG6fJLqUVTOMENZH)
+- Image Detection Model (hosted on ultralytics HUB) [FlavourFinder - v2](https://hub.ultralytics.com/models/af6qKxjR7JKNq39pWmPK)
+- Image Detection Training Dataset (hosted on ultralytics HUB) [Eggs.v5-custom_data5.yolov8](https://hub.ultralytics.com/datasets/mG8GrG6fJLqUVTOMENZH)
 - Spoonacular Food API [https://spoonacular.com/food-api](https://spoonacular.com/food-api)
 
 
