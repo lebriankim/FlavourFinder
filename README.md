@@ -61,7 +61,7 @@ To further encourage the reduction of food loss and waste, our application goes 
 
 Diagram and step-by-step description of the flow of our solution:
 
-![Solution Architecture](./images/Solution_Architecture.png)
+![Solution Architecture](./images/solution_architecture.png)
 
 1. Watson Assistant prompts the user to upload an image
 2. User uploads food image to Android application
