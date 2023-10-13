@@ -15,13 +15,6 @@
   - [Project development roadmap](#project-development-roadmap)
 - [Additional details](#additional-details)
   - [How to run the project](#how-to-run-the-project)
-  - [Live demo](#live-demo)
-- [About this template](#about-this-template)
-  - [Contributing](#contributing)
-  - [Versioning](#versioning)
-  - [Authors](#authors)
-  - [License](#license)
-  - [Acknowledgments](#acknowledgments)
 
 
 ## Project summary
@@ -70,6 +63,12 @@ Diagram and step-by-step description of the flow of our solution:
 5. Watson Assistant then sends the list of identified food items generated to Spoonacular API to generate recipes
 6. Watson Assistant displays a list of recipes
 
+Links:
+- Image Detection Model [FlavourFinder - v2](https://hub.ultralytics.com/models/af6qKxjR7JKNq39pWmPK)
+- Image Detection Training Dataset [Eggs.v5-custom_data5.yolov8](https://hub.ultralytics.com/datasets/mG8GrG6fJLqUVTOMENZH)
+- Spoonacular Food API [https://spoonacular.com/food-api](https://spoonacular.com/food-api)
+
+
 ## Presentation materials
 
 _INSTRUCTIONS: The following deliverables should be officially posted to your My Team > Submissions section of the [Call for Code Global Challenge resources site](https://cfc-prod.skillsnetwork.site/), but you can also include them here for completeness. Replace the examples seen here with your own deliverable links._
@@ -82,9 +81,11 @@ _INSTRUCTIONS: The following deliverables should be officially posted to your My
 
 The project currently does the following things.
 
-- Feature 1
-- Feature 2
-- Feature 3
+- Runs on Android.
+- Generates recipes based on list of food items entered by user.
+- Generates recipes based on picture of food items uploaded by user.
+- Generates up to 10 recipes per a request.
+- Displays pictures of recipes generated.
 
 In the future we plan to...
 
