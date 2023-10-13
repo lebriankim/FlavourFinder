@@ -64,10 +64,12 @@ Diagram and step-by-step description of the flow of our solution:
 
 ![Solution Architecture](./images/Solution_Architecture.png)
 
-1. User uploads food images to Android application
-2. The application send the uploaded images to YOLO API for image prediction
-3. YOLO classifies food items based on the uploaded images and returns a list of identified food items
-4. The list of identified food items is then sent to Spoonacular API to generate recipes
+1. Watson Assistant prompts the user to upload an image
+2. User uploads food image to Android application
+3. The application sends the uploaded image to our image detection model through the Ultralytics API for image prediction
+4. The model detects food items based on the uploaded image and returns a list of identified food items
+5. Watson Assistant then sends the list of identified food items generated to Spoonacular API to generate recipes
+6. Watson Assistant displays a list of recipes
 
 ## Presentation materials
 
