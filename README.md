@@ -73,7 +73,7 @@ Links:
 
 ### Solution demo video
 
-[![Watch the video](./images/FlavourFinder-thumbnail.png)](https://youtu.be/qdWVH6a654s)
+[![Watch the video](./images/FlavourFinder-thumbnail.png)](https://www.youtube.com/watch?v=y_LTA07PO-4)
 
 ### Project development roadmap
 
