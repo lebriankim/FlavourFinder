@@ -46,6 +46,7 @@ To further encourage the reduction of food loss and waste, our application goes 
 ### IBM AI service(s) used
 
 - [Watson Assistant](https://cloud.ibm.com/catalog/services/watson-assistant) - The Watson Assistant is integrated within our android application serving as a conversational system with the users. Through an interactive dialogue conversation, the assistant will prompt the user to upload food images. The uploaded image would then be sent to the model for image prediction and this would return a list of ingredients as identified from the image. Then the list of ingredients is sent to Spoonacular API which would return a list of recipes based on the ingredients. The list of recipes would then be displayed in the application as suggestions to which the user can pick any of the recipe they are interested in.
+  - The main class of our android application, [MainActivity.kt](https://github.com/lebriankim/FlavourFinder/blob/main/android-app/app/src/main/java/com/example/recipe/MainActivity.kt#L38), calls the IBM Watson Assistant service by rendering the webview of IBM Watson's chat views and functions that are defined in the [index.html](./android-app/app/src/main/assets/index.html) file.
 
 
 ### Solution architecture
