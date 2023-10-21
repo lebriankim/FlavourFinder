@@ -70,7 +70,7 @@ We have chosen IBM Watson® Assistant to create a user-friendly, guided experien
 >
 > <sup>[2]</sup> The actions of the workflow are defined in [recipe-bot-action-v32.json](https://github.com/lebriankim/FlavourFinder/blob/main/ibm/recipe-bot-action-v32.json)
 > 
-> <sup>[3]</sup> IBM Watson® Assistant's additional functions are defined in [index.html](ahttps://github.com/lebriankim/FlavourFinder/blob/main/ndroid-app/app/src/main/assets/index.html).
+> <sup>[3]</sup> IBM Watson® Assistant's additional functions are defined in [index.html](https://github.com/lebriankim/FlavourFinder/blob/main/android-app/app/src/main/assets/index.html).
 
 
 ### Solution architecture
