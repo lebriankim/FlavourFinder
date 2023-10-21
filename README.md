@@ -45,8 +45,32 @@ To further encourage the reduction of food loss and waste, our application goes 
 
 ### IBM AI service(s) used
 
-- [Watson Assistant](https://cloud.ibm.com/catalog/services/watson-assistant) - The Watson Assistant is integrated within our android application serving as a conversational system with the users. Through an interactive dialogue conversation, the assistant will prompt the user to upload food images. The uploaded image would then be sent to the model for image prediction and this would return a list of ingredients as identified from the image. Then the list of ingredients is sent to Spoonacular API which would return a list of recipes based on the ingredients. The list of recipes would then be displayed in the application as suggestions to which the user can pick any of the recipe they are interested in.
-  - The main class of our android application, [MainActivity.kt](https://github.com/lebriankim/FlavourFinder/blob/main/android-app/app/src/main/java/com/example/recipe/MainActivity.kt#L38), calls the IBM Watson Assistant service by rendering the webview of IBM Watson's chat views and functions that are defined in the [index.html](./android-app/app/src/main/assets/index.html) file.
+#### [IBM Watson® Assistant](https://cloud.ibm.com/catalog/services/watson-assistant)
+
+We leverage IBM Watson® Assistant to guide users through the process of discovering recipes based on a list of food items or a picture. The user interface of the application is provided through IBM Watson® Assistant's webview<sup>[1]</sup>. The process commences by offering the user a choice between providing a list of food items or a picture. The workflow<sup>[2]</sup> for each option is as follows:
+
+**List of Food Items Flow**
+
+1. The system prompts the user to enter a list of food items.
+2. It then constructs and dispatches a request to the Spooncular API using a custom extension.
+3. Upon receiving a response, the system informs the user about the number of recipes found.
+4. It displays the first recipe and offers options for navigating through the recipes (previous, next), concluding the process (done), or starting a new list of food items flow (new search).
+
+**Picture Flow**
+
+1. The system presents a button that allows users to upload a picture.
+2. When the user clicks this button<sup>[3]</sup>, control is transferred to a custom user interface that facilitates image uploading and forwards the image to the Ultralytics API for processing through our Image Detection model. The result is a list of food items.
+3. It proceeds to construct and transmit a request to the Spooncular API through a custom extension.
+4. After receiving a response, the system informs the user about the number of recipes found.
+5. It displays the first recipe and provides options for navigating through the recipes (previous, next), concluding the process (done), or initiating a new picture flow (new search).
+
+We have chosen IBM Watson® Assistant to create a user-friendly, guided experience, ensuring that even first-time users can easily navigate the application. This approach is designed to facilitate user adoption.
+
+> <sup>[1]</sup> The main class of our android application, [MainActivity.kt](https://github.com/lebriankim/FlavourFinder/blob/main/android-app/app/src/main/java/com/example/recipe/MainActivity.kt#L38), renders the webview.
+>
+> <sup>[2]</sup> The actions of the workflow are defined in [recipe-bot-action-v32.json](./ibm/recipe-bot-action-v32.json)
+> 
+> <sup>[3]</sup> IBM Watson® Assistant's additional functions are defined in [index.html](./android-app/app/src/main/assets/index.html).
 
 
 ### Solution architecture
